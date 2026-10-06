@@ -77,6 +77,29 @@ def ambience(base: float, noise_amt: float, shimmer: float, seconds=6.0, seed=1)
     return w[:-fade] * 0.8
 
 
+def to_mixer_array(wave: np.ndarray, init) -> np.ndarray:
+    """Convert a mono float wave (at RATE) to the mixer's real rate, sample
+    format and channel count (1, 2, 4, 6 or 8 channels)."""
+    freq, fmt, channels = init if init else (RATE, -16, 1)
+    data = np.clip(np.asarray(wave, dtype=np.float64), -1, 1) * 0.8
+    if freq != RATE and len(data) > 1:
+        n = max(1, int(round(len(data) * freq / RATE)))
+        data = np.interp(np.linspace(0, len(data) - 1, n), np.arange(len(data)), data)
+    bits = abs(fmt)
+    if fmt == 32 or fmt == -32:
+        # SDL reports float32 and int32 both as 32 bits; pygame-ce treats 32 as float
+        arr = data.astype(np.float32) if fmt == 32 else (data * 2147483647).astype(np.int32)
+    elif bits == 8:
+        arr = ((data * 127) + (128 if fmt > 0 else 0)).astype(np.uint8 if fmt > 0 else np.int8)
+    elif fmt > 0:
+        arr = ((data * 32767) + 32768).astype(np.uint16)
+    else:
+        arr = (data * 32767).astype(np.int16)
+    if channels > 1:
+        arr = np.repeat(arr[:, None], channels, axis=1)
+    return np.ascontiguousarray(arr)
+
+
 class Audio:
     def __init__(self, enabled: bool = True, volume: float = 0.5):
         self.ok = False
@@ -90,14 +113,24 @@ class Audio:
             return
         try:
             import pygame
-            if not pygame.mixer.get_init():
-                pygame.mixer.init(RATE, -16, 1, 512)
+            # pygame.init() may already have opened the device with the system's
+            # layout (e.g. 5.1 surround, 48 kHz, float samples); ask for a simple
+            # stereo 16-bit stream, then adapt to whatever was actually granted.
+            if pygame.mixer.get_init():
+                pygame.mixer.quit()
+            pygame.mixer.init(RATE, -16, 2, 512)
             self.pg = pygame
             self.ok = True
         except Exception as exc:  # no audio device: stay silent
             log.warning("audio disabled: %s", exc)
             return
-        self._build()
+        try:
+            self._build()
+        except Exception:
+            # sound is optional: never let it stop the game
+            log.exception("audio setup failed; continuing without sound")
+            self.ok = False
+            self.sounds.clear()
 
     def _snd(self, name, wave):
         f = ASSET_DIR / f"{name}.wav"
@@ -106,13 +139,7 @@ class Audio:
                 return self.pg.mixer.Sound(str(f))
             except Exception:
                 pass
-        init = self.pg.mixer.get_init()
-        channels = init[2] if init else 1
-        data = np.clip(wave, -1, 1)
-        arr = (data * 32767 * 0.8).astype(np.int16)
-        if channels == 2:
-            arr = np.column_stack([arr, arr])
-        return self.pg.sndarray.make_sound(np.ascontiguousarray(arr))
+        return self.pg.sndarray.make_sound(to_mixer_array(wave, self.pg.mixer.get_init()))
 
     def _build(self):
         mk = self._snd

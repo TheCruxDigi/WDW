@@ -162,7 +162,7 @@ def _seed_bytebloom(sim, region: Region, a: Anomaly, hours: float, now: int) -> 
     """Glitch blooms sprout bytebloom — corruption literally grows food for digital life."""
     near = [n for n in region.resources.values()
             if n.kind == "bytebloom" and abs(n.x - a.x) + abs(n.y - a.y) <= 6]
-    if len(near) >= 3:
+    if len(near) >= 3 or sum(1 for n in region.resources.values() if n.kind == "bytebloom") >= 16:
         return
     rng = sim.rng_for(region.id, "bloomseed", a.id, now // 60)
     if rng.random() > 0.05 * hours * a.intensity:

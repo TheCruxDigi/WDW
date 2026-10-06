@@ -202,7 +202,8 @@ class Simulation:
                 sp = world.species(c.species_id)
                 c.prev_x, c.prev_y = c.x, c.y
                 try:
-                    update_needs(self, c, sp, region)
+                    if (now + c.id) % 2 == 0:  # needs change slowly: update every other tick
+                        update_needs(self, c, sp, region, 2)
                     if c.alive:
                         self.brain.update(c, sp, region)
                     if c.alive and sp.has("break_structures"):
@@ -416,15 +417,15 @@ class Simulation:
         if killer is not None:
             killer.counters["kills"] += 1
             ecology.add_remains(world, region, c.x, c.y, sp.meat_value)
-        elif cause == "corruption":
+        elif cause == "corruption" and sum(1 for n in region.resources.values() if n.kind == "bytebloom") < 16:
             # bodies of the corrupted dissolve into bytebloom — corruption feeds itself
             from ..world.region import ResourceNode
             n = ResourceNode(world.new_id(), "bytebloom", int(c.x), int(c.y), 6.0, 18.0)
             region.resources[n.id] = n
-        elif cause != "old age":
-            ecology.add_remains(world, region, c.x, c.y, sp.meat_value * 0.6)
-        else:
+        elif cause == "old age":
             ecology.add_remains(world, region, c.x, c.y, sp.meat_value * 0.4)
+        else:
+            ecology.add_remains(world, region, c.x, c.y, sp.meat_value * 0.6)
         # witnesses
         for o in world.nearby(region.id, c.x, c.y, 10):
             if o is c or not o.alive:

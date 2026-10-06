@@ -96,6 +96,8 @@ class Eat(Action):
                 cost = d + (6.0 if full else 0.0) - mult * 3.0 - min(node.amount, 20) * 0.1
                 cost += c.memory.danger_near(ctx.region.id, node.x, node.y, ctx.now) * 10
                 ft = ctx.region.territory_at(node.x, node.y)
+                if ft is not None and c.blacklisted(f"terr{ft.id}", ctx.now) and h < 0.85:
+                    continue
                 if ft is not None and ft is not p.own_territory and ft.strength > 0.3:
                     owner = ctx.world.groups.get(ft.group_id)
                     if owner and (owner.species_id == c.species_id or ctx.world.species(owner.species_id).is_predator):
@@ -599,6 +601,10 @@ class Explore(Action):
             goal = None
             for _ in range(6):
                 cand = pick_walkable_near(region, anchor_x, anchor_y, sim.rng, radius, sp.has("swim"))
+                if cand:
+                    t = region.territory_at(cand[0], cand[1])
+                    if t is not None and c.blacklisted(f"terr{t.id}", now):
+                        continue
                 if cand and c.memory.danger_near(region.id, cand[0], cand[1], now) < 0.3:
                     goal = cand
                     break
@@ -803,6 +809,8 @@ class DefendTerritory(Action):
                 score = 0.25 + c.traits["aggression"] * 0.4 + hostile * 0.4 + c.needs["territory"] * 0.2
                 out.append(Option(self, score, PLAYER_ID, "driving the Wayfinder out of the territory"))
                 continue
+            if c.blacklisted(f"chase{o.id}", ctx.now):
+                continue
             osp = ctx.world.species(o.species_id)
             ratio = strength(o, osp) / max(1.0, strength(c, sp))
             score = 0.3 + c.traits["aggression"] * 0.45 + c.needs["territory"] * 0.3 - max(0.0, ratio - 1.2) * 0.4
@@ -837,6 +845,7 @@ class DefendTerritory(Action):
                 return FAILED
             return RUNNING
         sim.intimidate(c, sp, o, terr)
+        c.ban(f"chase{o.id}", now, 90)
         c.needs["territory"] = 0.0
         return SUCCESS
 
@@ -906,7 +915,7 @@ class Regroup(Action):
         if leader is None or leader.region_id != c.region_id:
             return []
         d = _dist(c, leader.x, leader.y)
-        if d < 9:
+        if d < (4.5 if c.action_name == "regroup" else 9):  # hysteresis: finish the approach
             return []
         score = 0.15 + c.traits["sociability"] * 0.3 * min(1.5, d / 15.0)
         return [Option(self, score, leader.id, f"{d:.0f} tiles from leader {leader.name}")]
@@ -991,9 +1000,10 @@ class Mate(Action):
         if p.max_danger > 0.3:
             return []
         index = ctx.sim.food_index(ctx.region, sp.id)
-        if index < 0.8:
+        fertility = min(1.0, max(0.0, (index - 0.35) / 0.6))
+        if fertility <= 0.05:
             return []
-        score = 0.35 + min(0.3, (index - 0.8) * 0.3)
+        score = 0.2 + 0.35 * fertility
         if sp.has("asexual"):
             if ctx.p.corruption < 0.25:
                 return []

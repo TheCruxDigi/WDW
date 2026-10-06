@@ -174,7 +174,7 @@ class AbstractSimulator:
         prey = [p for p in alive if p.alive and p.species_id in sp.prey and p is not c]
         if not prey:
             return
-        p_success = min(0.85, 0.15 + len(prey) / (len(prey) + 12.0)) * min(1.0, s / 60.0) * c.needs["hunger"]
+        p_success = min(0.7, 0.06 + 0.5 * len(prey) / (len(prey) + 15.0)) * min(1.0, s / 60.0) * c.needs["hunger"]
         # herds that mob predators make hunting harder
         mobbers = sum(1 for p in prey if world.species(p.species_id).has("mob"))
         p_success *= 1.0 / (1.0 + mobbers * 0.15)
@@ -192,6 +192,14 @@ class AbstractSimulator:
         c.needs["hunger"] = max(0.0, c.needs["hunger"] - eaten / sp.appetite)
         c.counters["kills"] += 1
         left = vsp.meat_value - eaten
+        if c.group_id is not None:  # the pack shares the kill
+            for mate in alive:
+                if left <= 1:
+                    break
+                if mate is not c and mate.alive and mate.group_id == c.group_id and mate.needs["hunger"] > 0.2:
+                    share = min(left, mate.needs["hunger"] * sp.appetite)
+                    mate.needs["hunger"] -= share / sp.appetite
+                    left -= share
         if left > 3:
             ecology.add_remains(world, region, victim.x, victim.y, left)
 
@@ -219,7 +227,9 @@ class AbstractSimulator:
             return
         if c.needs["hunger"] > 0.45 or c.needs["thirst"] > 0.5 or c.health < 0.6 or c.taint > 0.6:
             return
-        if self.sim.food_index(region, sp.id, pop_override=self._pop(alive)) < 0.8:
+        index = self.sim.food_index(region, sp.id, pop_override=self._pop(alive))
+        fertility = min(1.0, max(0.0, (index - 0.35) / 0.6))
+        if fertility <= 0:
             return
         partner = None
         if sp.has("asexual"):
@@ -233,7 +243,7 @@ class AbstractSimulator:
                     break
             if partner is None:
                 return
-        if rng.random() > 0.3 * min(1.0, s / 60.0):
+        if rng.random() > 0.3 * fertility * min(1.0, s / 60.0):
             return
         kids = self.sim.make_offspring(region, c, partner, t, rng)
         for k in kids:

@@ -250,7 +250,7 @@ def populate_region(world: World, region: Region, rng: random.Random) -> list[Cr
         if sid == "glitchwyrm":
             n_groups = 1 if (biome_id == "null_rift" or rng.random() < 0.12) else 0
         elif sp.is_predator:
-            n_groups = 1 if rng.random() < h * 0.65 else 0
+            n_groups = 1 if rng.random() < h * 0.45 else 0
         elif sid == "lumen_keeper":
             n_groups = 1 if rng.random() < h * 0.6 else 0
         else:

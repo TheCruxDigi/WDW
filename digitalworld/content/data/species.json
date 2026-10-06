@@ -37,7 +37,7 @@
   "defense": 2,
   "lifespan_days": 22,
   "maturity_days": 2,
-  "repro_cooldown_days": 2.2,
+  "repro_cooldown_days": 1.8,
   "litter": [
    1,
    2
@@ -182,10 +182,10 @@
   "defense": 8,
   "lifespan_days": 34,
   "maturity_days": 4,
-  "repro_cooldown_days": 4.5,
+  "repro_cooldown_days": 3.5,
   "litter": [
    1,
-   1
+   2
   ],
   "social": "herd",
   "group_size": [
@@ -249,7 +249,7 @@
   "drink": 7,
   "meat_value": 35,
   "rates": {
-   "hunger": 0.00055,
+   "hunger": 0.0004,
    "thirst": 0.0011,
    "energy": 0.0008,
    "social": 0.0009,
@@ -260,7 +260,7 @@
   "defense": 4,
   "lifespan_days": 30,
   "maturity_days": 4,
-  "repro_cooldown_days": 5.5,
+  "repro_cooldown_days": 3.5,
   "litter": [
    1,
    2
@@ -268,7 +268,7 @@
   "social": "pack",
   "group_size": [
    2,
-   4
+   3
   ],
   "territorial": true,
   "territory_radius": 14,
@@ -400,7 +400,7 @@
   "drink": 6,
   "meat_value": 35,
   "rates": {
-   "hunger": 0.0006,
+   "hunger": 0.00045,
    "thirst": 0.001,
    "energy": 0.0008,
    "social": 0.0003,
@@ -411,7 +411,7 @@
   "defense": 5,
   "lifespan_days": 30,
   "maturity_days": 4,
-  "repro_cooldown_days": 5,
+  "repro_cooldown_days": 3.5,
   "litter": [
    1,
    1
@@ -485,7 +485,7 @@
   "defense": 1,
   "lifespan_days": 10,
   "maturity_days": 1,
-  "repro_cooldown_days": 1.6,
+  "repro_cooldown_days": 2.2,
   "litter": [
    1,
    2
@@ -555,7 +555,7 @@
   "drink": 3,
   "meat_value": 60,
   "rates": {
-   "hunger": 0.00045,
+   "hunger": 0.00035,
    "thirst": 0.0004,
    "energy": 0.0006,
    "social": 0.0,
@@ -566,7 +566,7 @@
   "defense": 9,
   "lifespan_days": 40,
   "maturity_days": 6,
-  "repro_cooldown_days": 9,
+  "repro_cooldown_days": 6,
   "litter": [
    1,
    1
@@ -641,10 +641,10 @@
   "defense": 4,
   "lifespan_days": 36,
   "maturity_days": 4,
-  "repro_cooldown_days": 6,
+  "repro_cooldown_days": 4.0,
   "litter": [
    1,
-   1
+   2
   ],
   "social": "herd",
   "group_size": [
@@ -716,7 +716,7 @@
   "defense": 3,
   "lifespan_days": 26,
   "maturity_days": 3,
-  "repro_cooldown_days": 3.2,
+  "repro_cooldown_days": 2.6,
   "litter": [
    1,
    2

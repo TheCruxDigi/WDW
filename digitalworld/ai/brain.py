@@ -134,6 +134,11 @@ class Brain:
             young = now - cur["start"] < MIN_COMMIT_TICKS
             if young and best.action.name not in URGENT and cur["name"] not in ("wander", "explore"):
                 return
+            if cur["name"] in ("rest", "shelter") and best.action.name not in URGENT:
+                # sleep inertia: only a clearly stronger drive wakes a resting creature
+                cur_score = next((o.score for o in options if o.action.name == cur["name"]), 0.0)
+                if best.score < cur_score + 0.3 and best.score < 0.9:
+                    return
             self._finish(c, ACTIONS_BY_NAME[cur["name"]], PREEMPTED)
             c.next_decide_tick = now + sim.config.decide_interval + (c.id % 3)
         c.action = best.action.start(sim, c, sp, best)

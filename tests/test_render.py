@@ -70,3 +70,22 @@ def test_save_from_app_and_continue(app, tmp_path):
     tick = app.sim.world.clock.tick
     assert app.try_continue()
     assert app.sim.world.clock.tick >= tick
+
+
+def test_title_screen_and_continue_flow(tmp_path):
+    from digitalworld.render.app import App
+    cfg = small_config(tmp_path, seed=6)
+    a = App(cfg, new_world=True, seed=6)
+    a.save(quiet=True)
+    pygame.quit()
+    b = App(cfg)                      # fresh start shows the title screen
+    assert b.state == "title"
+    b.dt = 1 / 30
+    b.draw_title()
+    b.handle_title(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_RETURN, mod=0, unicode=""))
+    assert b.state == "game" and b.sim is not None   # "Continue" loaded the save
+    b.handle(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_ESCAPE, mod=0, unicode=""))
+    assert b.state == "menu"
+    b.draw_game(update_view=False)
+    b.draw_menu()
+    pygame.quit()

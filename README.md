@@ -15,7 +15,19 @@ interviene, y el mundo recuerda lo que hace.
 | ![Mapa del mundo](docs/screenshots/03_world_map.png) | ![Crónica](docs/screenshots/04_chronicle.png) |
 | ![Región corrupta](docs/screenshots/05_corrupted_region.png) | ![Depuración](docs/screenshots/02_debug_territories.png) |
 
-## Instalación y ejecución
+## Probarlo en Windows (sin instalar Python)
+
+1. Descarga **`DigitalWorld-windows.zip`** de la pre-release
+   [windows-latest](https://github.com/TheCruxDigi/WDW/releases/tag/windows-latest)
+   (la compila y prueba automáticamente GitHub Actions en una máquina Windows en cada push).
+2. Descomprime la carpeta y abre `DigitalWorld.exe`. Si SmartScreen avisa (el ejecutable no está
+   firmado): *Más información* → *Ejecutar de todas formas*.
+3. `COMO_JUGAR.txt` dentro del zip resume los controles.
+
+El mundo corre en tiempo real (a 1× un día del mundo dura 2,4 minutos) y sigue avanzando al mismo
+ritmo mientras el juego está cerrado, hasta 7 días del mundo.
+
+## Instalación y ejecución desde el código
 
 Requisitos: Python 3.10+ (probado con 3.13), `pygame-ce` y `numpy`.
 

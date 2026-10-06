@@ -1,7 +1,8 @@
 # PyInstaller spec — build with:  pyinstaller packaging/digitalworld.spec --noconfirm
-# Produces dist/DigitalWorld/ (one-folder build: fast start, easy to inspect).
+# Produces dist/DigitalWorld/ with:
+#   DigitalWorld.exe          the game (windowed)
+#   DigitalWorldConsola.exe   same program with a console: --headless, tools, logs on screen
 import os
-from PyInstaller.utils.hooks import collect_data_files
 
 ROOT = os.path.abspath(os.path.join(SPECPATH, ".."))
 datas = [(os.path.join(ROOT, "digitalworld", "content", "data"), os.path.join("digitalworld", "content", "data"))]
@@ -13,9 +14,9 @@ a = Analysis(
     pathex=[ROOT],
     datas=datas,
     hiddenimports=["digitalworld.tools.inspect", "digitalworld.tools.screenshots"],
-    excludes=["tkinter", "pandas", "matplotlib", "scipy"],
+    excludes=["tkinter", "pandas", "matplotlib", "scipy", "pytest"],
 )
 pyz = PYZ(a.pure)
-exe = EXE(pyz, a.scripts, [], exclude_binaries=True, name="DigitalWorld",
-          console=False, icon=None)
-coll = COLLECT(exe, a.binaries, a.datas, name="DigitalWorld")
+game = EXE(pyz, a.scripts, [], exclude_binaries=True, name="DigitalWorld", console=False)
+cli = EXE(pyz, a.scripts, [], exclude_binaries=True, name="DigitalWorldConsola", console=True)
+coll = COLLECT(game, cli, a.binaries, a.datas, name="DigitalWorld")

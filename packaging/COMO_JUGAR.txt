@@ -1,0 +1,38 @@
+DIGITAL WORLD — cómo jugar
+==========================
+
+1. Descomprime la carpeta entera (no ejecutes el .exe desde dentro del zip).
+2. Abre DigitalWorld.exe. La primera vez Windows SmartScreen puede avisar porque el
+   ejecutable no está firmado: "Más información" -> "Ejecutar de todas formas".
+3. En la pantalla de título elige "New World" (o "Continue" si ya tienes partida).
+
+El mundo corre en tiempo real: a velocidad 1x un día del mundo dura 2,4 minutos.
+Las criaturas comen, duermen, cazan, migran y recuerdan lo que haces. Cuando cierras
+el juego el tiempo sigue pasando al mismo ritmo (hasta 7 días del mundo), y al volver
+el juego te cuenta qué ocurrió.
+
+CONTROLES
+  WASD / flechas ..... moverse (Shift = correr)
+  Clic izquierdo ..... inspeccionar una criatura (necesidades, decisiones, memoria)
+  F .................. alimentar a la criatura más cercana (gasta semillas)
+  C .................. curarla (20 de energía)      X ... espantarla
+  Q .................. escanear                      G ... recolectar de una planta/cristal
+  R .................. pulso contra la corrupción (30 de energía)
+  B / V .............. levantar baliza (5 esquirlas) / desmontarla
+  Espacio ............ pausa        [ y ] ... más lento / más rápido (hasta 16x)
+  N .................. descansar 6 horas (el mundo entero avanza)
+  M / J / K .......... mapa del mundo / crónica / diario y bestiario
+  L / Tab / F3 ....... territorios / depuración / rendimiento
+  Rueda o Z .......... zoom        F5 / F9 ... guardar / cargar      Esc ... menú
+  F1 ................. ayuda
+
+Para pasar a otra región camina hasta los cuadros blancos del borde del mapa.
+
+ARCHIVOS
+  Partidas y registros: %APPDATA%\DigitalWorld   (saves\world.db, logs\digitalworld.log)
+  Si el juego se cierra por un error, el detalle queda en logs\crash.txt.
+
+CONSOLA (opcional)
+  DigitalWorldConsola.exe --headless --ticks 4320          simula 3 días sin ventana
+  DigitalWorldConsola.exe inspect summary                 resumen del mundo guardado
+  DigitalWorldConsola.exe inspect why <nombre o id>       por qué una criatura hace lo que hace

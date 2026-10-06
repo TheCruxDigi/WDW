@@ -42,8 +42,9 @@ class Config:
     abstract_step_ticks: int = 60 # granularity of dormant region simulation
     dormant_refresh_ticks: int = 120  # how often one dormant region is advanced
     offline_progress: bool = True
-    offline_ticks_per_real_second: float = 1.0
-    offline_max_ticks: int = 1440 * 3
+    # 0 = time keeps flowing while the game is closed at the same pace as at 1x
+    offline_ticks_per_real_second: float = 0.0
+    offline_max_ticks: int = 1440 * 7
 
     # persistence
     data_dir: str = ""

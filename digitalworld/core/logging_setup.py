@@ -14,7 +14,8 @@ def setup_logging(level: str = "INFO", log_dir: Path | None = None, to_file: boo
     for h in list(root.handlers):
         root.removeHandler(h)
     fmt = logging.Formatter("%(asctime)s %(levelname)-7s %(name)s: %(message)s", "%H:%M:%S")
-    if console:
+    import sys
+    if console and sys.stderr is not None:  # windowed (frozen) builds have no console
         sh = logging.StreamHandler()
         sh.setFormatter(fmt)
         sh.setLevel(logging.WARNING)

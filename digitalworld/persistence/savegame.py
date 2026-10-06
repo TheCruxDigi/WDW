@@ -374,7 +374,8 @@ def load(path: str | os.PathLike, config: Config | None = None, offline: bool | 
         saved_at = raw["meta"].get("saved_at")
         if do_offline and saved_at:
             elapsed = max(0.0, time.time() - float(saved_at))
-            ticks = int(min(cfg.offline_max_ticks, elapsed * cfg.offline_ticks_per_real_second))
+            rate = cfg.offline_ticks_per_real_second or cfg.tick_rate
+            ticks = int(min(cfg.offline_max_ticks, elapsed * rate))
             if ticks >= 10:
                 report["offline_ticks"] = ticks
                 report["offline_events"] = sim.fast_forward(ticks)

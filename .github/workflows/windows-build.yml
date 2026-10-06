@@ -1,0 +1,70 @@
+name: Windows build
+
+on:
+  push:
+    branches: [main, "claude/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    env:
+      SDL_VIDEODRIVER: dummy
+      SDL_AUDIODRIVER: dummy
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements-dev.txt
+
+      - name: Run test suite on Windows
+        run: python -m pytest -q
+
+      - name: Build executable
+        run: pyinstaller packaging/digitalworld.spec --noconfirm
+
+      - name: Smoke-test the built executable
+        shell: pwsh
+        run: |
+          $exe = "dist\DigitalWorld\DigitalWorldConsola.exe"
+          & $exe --data-dir smoke --headless --ticks 600 --save
+          if ($LASTEXITCODE -ne 0) { throw "headless run failed" }
+          & $exe inspect validate --data-dir smoke
+          if ($LASTEXITCODE -ne 0) { throw "save validation failed" }
+          & $exe --data-dir smoke2 --new --seed 7 --screenshot windows-screenshot.png --frames 90
+          if ($LASTEXITCODE -ne 0) { throw "render run failed" }
+          if (-not (Test-Path windows-screenshot.png)) { throw "no screenshot produced" }
+
+      - name: Package zip
+        shell: pwsh
+        run: |
+          Copy-Item packaging\COMO_JUGAR.txt dist\DigitalWorld\
+          Copy-Item README.md dist\DigitalWorld\
+          Compress-Archive -Path dist\DigitalWorld -DestinationPath DigitalWorld-windows.zip -Force
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DigitalWorld-windows
+          path: |
+            DigitalWorld-windows.zip
+            windows-screenshot.png
+
+      - name: Publish download (pre-release)
+        if: github.event_name != 'pull_request'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = "windows-latest"
+          gh release delete $tag --yes --cleanup-tag 2>$null
+          gh release create $tag DigitalWorld-windows.zip windows-screenshot.png `
+            --prerelease --target $env:GITHUB_SHA `
+            --title "Digital World para Windows (build más reciente)" `
+            --notes "Descarga DigitalWorld-windows.zip, descomprímelo y abre DigitalWorld.exe. Instrucciones en COMO_JUGAR.txt. Compilado desde $env:GITHUB_SHA."

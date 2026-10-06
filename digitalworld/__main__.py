@@ -56,9 +56,33 @@ def main(argv=None) -> int:
     if args.screenshot:
         os.environ.setdefault("SDL_AUDIODRIVER", "dummy")
     from .render.app import App
-    app = App(cfg, new_world=args.new, seed=args.seed, screenshot=args.screenshot, frames=args.frames)
-    app.run()
+    try:
+        app = App(cfg, new_world=args.new, seed=args.seed, screenshot=args.screenshot, frames=args.frames)
+        app.run()
+    except Exception as exc:  # leave a readable trace instead of a silent exit
+        import logging
+        import traceback
+        logging.getLogger("digitalworld").exception("fatal error")
+        crash = cfg.logs_dir / "crash.txt"
+        try:
+            crash.parent.mkdir(parents=True, exist_ok=True)
+            crash.write_text(traceback.format_exc(), encoding="utf-8")
+        except OSError:
+            pass
+        _error_box(f"Digital World se ha cerrado por un error:\n{exc}\n\nDetalles en:\n{crash}")
+        return 1
     return 0
+
+
+def _error_box(msg: str) -> None:
+    if os.name == "nt":
+        try:
+            import ctypes
+            ctypes.windll.user32.MessageBoxW(None, msg, "Digital World", 0x10)
+            return
+        except Exception:
+            pass
+    print(msg, file=sys.stderr)
 
 
 def run_headless(cfg, args) -> int:

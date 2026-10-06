@@ -57,6 +57,9 @@ class Simulation:
     def new(cls, config: Config, with_player: bool = True) -> "Simulation":
         world = World(config)
         generate_world(world)
+        world.clock.tick = 7 * TICKS_PER_HOUR  # dawn of the first day
+        for r in world.regions.values():
+            r.last_sim_tick = world.clock.tick
         sim = cls(world)
         start = choose_start_region(world)
         sim.focus_region = start
@@ -71,7 +74,7 @@ class Simulation:
             r.flags.setdefault("band", r.corruption_band())
         chronicle.world_census(sim)
         sim.update_lod(force_all=True)
-        world.history.record(0, "genesis", f"The world awoke. {len(world.regions)} regions, "
+        world.history.record(world.clock.tick, "genesis", f"The world awoke. {len(world.regions)} regions, "
                              f"{world.total_population()} creatures of {len(world.content.species)} species.",
                              None, importance=3)
         if world.player is not None:
@@ -450,7 +453,7 @@ class Simulation:
             if c.id in g.members:
                 g.members.remove(c.id)
             if g.leader_id == c.id:
-                notable = max(notable, 2 if len(g.members) >= 2 else 1)
+                notable = max(notable, 2 if len(g.members) >= 4 or sp.is_predator else 1)
                 what.append(f"leader of the {g.name}")
                 g.leader_id = None
         prel = c.relations.get(PLAYER_ID)

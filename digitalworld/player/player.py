@@ -30,10 +30,11 @@ class Player:
         self.toasts: deque = deque(maxlen=6)     # (text, ttl seconds)
         self.last_hit_tick = -999
 
-    def note(self, tick: int, text: str, toast: bool = True) -> None:
+    def note(self, tick: int, text: str, toast: bool | str = True) -> None:
+        """Journal entry; ``toast`` may be a shorter on-screen variant."""
         self.journal.append((tick, text))
         if toast:
-            self.toasts.append([text, 5.0])
+            self.toasts.append([toast if isinstance(toast, str) else text, 5.0])
 
     def to_dict(self) -> dict:
         return {"region_id": self.region_id, "x": round(self.x, 3), "y": round(self.y, 3),

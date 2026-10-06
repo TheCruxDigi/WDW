@@ -114,7 +114,7 @@ def enter_region(sim, rid: int, first: bool = False) -> None:
         p.discovered_regions[rid] = now
         world.history.record(now, "player_discovery", f"The Wayfinder discovered {region.name} ({biome.name}).",
                              rid, importance=2 if not first else 1, region_name=region.name)
-        p.note(now, f"Discovered {region.name} — {biome.description}")
+        p.note(now, f"Discovered {region.name} — {biome.description}", f"Discovered {region.name} ({biome.name})")
     else:
         since = region.last_player_tick
         if since is not None and now - since > TICKS_PER_DAY // 2:
@@ -151,7 +151,7 @@ def _discover(sim, p, region, now) -> None:
         if c.species_id not in p.discovered_species:
             sp = world.species(c.species_id)
             p.discovered_species[c.species_id] = now
-            p.note(now, f"New species observed: {sp.name}. {sp.description}")
+            p.note(now, f"New species observed: {sp.name}. {sp.description}", f"New species observed: {sp.name}")
             world.history.record(now, "species_discovered", f"The Wayfinder first observed a {sp.name} in {region.name}.",
                                  region.id, importance=1, species=sp.id)
     for a in region.anomalies.values():

@@ -1,0 +1,307 @@
+{
+ "verdant_lattice": {
+  "name": "Verdant Lattice",
+  "kind": "forest",
+  "description": "Old-growth canopy whose roots braid into luminous lattices.",
+  "terrain": {
+   "style": "forest",
+   "water": 0.07,
+   "obstacle": 0.22
+  },
+  "resources": {
+   "grass": 12,
+   "fruit": 10,
+   "fungus": 3,
+   "water": 4,
+   "shelter": 4,
+   "material": 2
+  },
+  "fertility": 1.0,
+  "rain": 0.65,
+  "base_corruption": 0.04,
+  "resistance": 0.75,
+  "palette": {
+   "ground": [
+    62,
+    112,
+    58
+   ],
+   "ground2": [
+    74,
+    98,
+    52
+   ],
+   "accent": [
+    140,
+    220,
+    120
+   ]
+  },
+  "ambience": {
+   "base": 110.0,
+   "noise": 0.25,
+   "shimmer": 0.3
+  }
+ },
+ "tidewire_coast": {
+  "name": "Tidewire Coast",
+  "kind": "coast",
+  "description": "Copper-veined shores where the tide hums in binary.",
+  "terrain": {
+   "style": "coast",
+   "water": 0.3,
+   "obstacle": 0.05
+  },
+  "resources": {
+   "grass": 6,
+   "fruit": 4,
+   "shoal": 10,
+   "water": 5,
+   "shelter": 2,
+   "material": 3
+  },
+  "fertility": 0.85,
+  "rain": 0.6,
+  "base_corruption": 0.06,
+  "resistance": 0.6,
+  "palette": {
+   "ground": [
+    196,
+    182,
+    128
+   ],
+   "ground2": [
+    100,
+    150,
+    90
+   ],
+   "accent": [
+    90,
+    200,
+    220
+   ]
+  },
+  "ambience": {
+   "base": 82.0,
+   "noise": 0.55,
+   "shimmer": 0.2
+  }
+ },
+ "murkcache_marsh": {
+  "name": "Murkcache Marsh",
+  "kind": "swamp",
+  "description": "Sunken caches of forgotten data rot beneath peat and reed.",
+  "terrain": {
+   "style": "marsh",
+   "water": 0.22,
+   "obstacle": 0.1
+  },
+  "resources": {
+   "grass": 6,
+   "fungus": 10,
+   "fruit": 3,
+   "water": 6,
+   "shelter": 3,
+   "bytebloom": 2,
+   "material": 1
+  },
+  "fertility": 0.9,
+  "rain": 0.85,
+  "base_corruption": 0.12,
+  "resistance": 0.45,
+  "palette": {
+   "ground": [
+    70,
+    82,
+    56
+   ],
+   "ground2": [
+    86,
+    72,
+    50
+   ],
+   "accent": [
+    170,
+    200,
+    90
+   ]
+  },
+  "ambience": {
+   "base": 65.0,
+   "noise": 0.4,
+   "shimmer": 0.35
+  }
+ },
+ "echo_hollows": {
+  "name": "Echo Hollows",
+  "kind": "caves",
+  "description": "Caverns where every sound returns slightly altered.",
+  "terrain": {
+   "style": "caves",
+   "water": 0.06,
+   "obstacle": 0.45
+  },
+  "resources": {
+   "fungus": 12,
+   "water": 4,
+   "shelter": 6,
+   "material": 5,
+   "bytebloom": 2
+  },
+  "fertility": 0.6,
+  "rain": 0.3,
+  "base_corruption": 0.15,
+  "resistance": 0.5,
+  "palette": {
+   "ground": [
+    64,
+    60,
+    72
+   ],
+   "ground2": [
+    52,
+    48,
+    60
+   ],
+   "accent": [
+    150,
+    120,
+    230
+   ]
+  },
+  "ambience": {
+   "base": 55.0,
+   "noise": 0.15,
+   "shimmer": 0.6
+  }
+ },
+ "glass_dunes": {
+  "name": "Glass Dunes",
+  "kind": "desert",
+  "description": "Sand fused into whispering glass by an ancient overclock.",
+  "terrain": {
+   "style": "desert",
+   "water": 0.03,
+   "obstacle": 0.08
+  },
+  "resources": {
+   "sunbulb": 10,
+   "grass": 3,
+   "water": 2,
+   "shelter": 2,
+   "material": 4
+  },
+  "fertility": 0.65,
+  "rain": 0.15,
+  "base_corruption": 0.08,
+  "resistance": 0.55,
+  "palette": {
+   "ground": [
+    214,
+    190,
+    132
+   ],
+   "ground2": [
+    200,
+    168,
+    112
+   ],
+   "accent": [
+    255,
+    220,
+    150
+   ]
+  },
+  "ambience": {
+   "base": 98.0,
+   "noise": 0.6,
+   "shimmer": 0.1
+  }
+ },
+ "static_steppe": {
+  "name": "Static Steppe",
+  "kind": "grassland",
+  "description": "Open plains where the grass crackles with faint static.",
+  "terrain": {
+   "style": "steppe",
+   "water": 0.05,
+   "obstacle": 0.06
+  },
+  "resources": {
+   "grass": 16,
+   "fruit": 3,
+   "water": 4,
+   "shelter": 2,
+   "material": 2
+  },
+  "fertility": 0.95,
+  "rain": 0.5,
+  "base_corruption": 0.05,
+  "resistance": 0.7,
+  "palette": {
+   "ground": [
+    118,
+    150,
+    74
+   ],
+   "ground2": [
+    140,
+    156,
+    84
+   ],
+   "accent": [
+    220,
+    230,
+    120
+   ]
+  },
+  "ambience": {
+   "base": 130.0,
+   "noise": 0.45,
+   "shimmer": 0.15
+  }
+ },
+ "null_rift": {
+  "name": "Null Rift",
+  "kind": "anomaly",
+  "description": "A wound in the world where geometry forgets itself.",
+  "terrain": {
+   "style": "rift",
+   "water": 0.04,
+   "obstacle": 0.18
+  },
+  "resources": {
+   "bytebloom": 12,
+   "water": 3,
+   "shelter": 2,
+   "material": 6,
+   "fungus": 2
+  },
+  "fertility": 0.35,
+  "rain": 0.2,
+  "base_corruption": 0.62,
+  "resistance": 0.1,
+  "palette": {
+   "ground": [
+    40,
+    26,
+    58
+   ],
+   "ground2": [
+    30,
+    40,
+    70
+   ],
+   "accent": [
+    255,
+    60,
+    200
+   ]
+  },
+  "ambience": {
+   "base": 46.0,
+   "noise": 0.3,
+   "shimmer": 0.9
+  }
+ }
+}

@@ -1,0 +1,152 @@
+{
+ "grass": {
+  "name": "Lattice grass",
+  "capacity": 40,
+  "regen": 0.03,
+  "corruption": -1.1,
+  "season": 0.4,
+  "rain": 0.5,
+  "feeders": 3,
+  "food": true,
+  "color": [
+   120,
+   200,
+   80
+  ]
+ },
+ "fruit": {
+  "name": "Glowfruit",
+  "capacity": 24,
+  "regen": 0.018,
+  "corruption": -1.0,
+  "season": 0.7,
+  "rain": 0.3,
+  "feeders": 2,
+  "food": true,
+  "color": [
+   240,
+   120,
+   90
+  ]
+ },
+ "fungus": {
+  "name": "Echo fungus",
+  "capacity": 30,
+  "regen": 0.022,
+  "corruption": -0.3,
+  "season": 0.1,
+  "rain": 0.4,
+  "feeders": 3,
+  "food": true,
+  "color": [
+   200,
+   150,
+   240
+  ]
+ },
+ "bytebloom": {
+  "name": "Bytebloom",
+  "capacity": 30,
+  "regen": 0.004,
+  "corruption": 2.6,
+  "season": 0.0,
+  "rain": 0.0,
+  "feeders": 3,
+  "food": true,
+  "color": [
+   255,
+   70,
+   210
+  ]
+ },
+ "shoal": {
+  "name": "Prism shoal",
+  "capacity": 40,
+  "regen": 0.026,
+  "corruption": -0.8,
+  "season": 0.3,
+  "rain": 0.0,
+  "feeders": 2,
+  "food": true,
+  "color": [
+   90,
+   210,
+   255
+  ]
+ },
+ "sunbulb": {
+  "name": "Sunbulb",
+  "capacity": 26,
+  "regen": 0.021,
+  "corruption": -0.8,
+  "season": 0.3,
+  "rain": 0.2,
+  "feeders": 2,
+  "food": true,
+  "color": [
+   255,
+   200,
+   70
+  ]
+ },
+ "meat": {
+  "name": "Remains",
+  "capacity": 60,
+  "regen": -0.015,
+  "corruption": 0.0,
+  "season": 0.0,
+  "rain": 0.0,
+  "feeders": 3,
+  "food": true,
+  "color": [
+   170,
+   60,
+   60
+  ]
+ },
+ "water": {
+  "name": "Clear pool",
+  "capacity": 220,
+  "regen": 0.35,
+  "corruption": 0.0,
+  "season": 0.0,
+  "rain": 1.0,
+  "feeders": 5,
+  "food": false,
+  "color": [
+   70,
+   140,
+   230
+  ]
+ },
+ "material": {
+  "name": "Lumen shards",
+  "capacity": 18,
+  "regen": 0.003,
+  "corruption": 0.4,
+  "season": 0.0,
+  "rain": 0.0,
+  "feeders": 2,
+  "food": false,
+  "color": [
+   180,
+   240,
+   255
+  ]
+ },
+ "shelter": {
+  "name": "Hollow",
+  "capacity": 4,
+  "regen": 0.0,
+  "corruption": 0.0,
+  "season": 0.0,
+  "rain": 0.0,
+  "feeders": 4,
+  "food": false,
+  "color": [
+   110,
+   90,
+   70
+  ]
+ }
+}

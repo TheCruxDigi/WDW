@@ -1,0 +1,3 @@
+# Runtime
+pygame-ce>=2.4
+numpy>=1.24

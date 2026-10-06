@@ -400,6 +400,9 @@ def draw_chronicle(surf, sim, state: dict) -> None:
 
 # ------------------------------------------------------------------ journal / bestiary
 
+_ICONS: dict = {}
+
+
 def draw_journal(surf, sim) -> None:
     world = sim.world
     p = world.player
@@ -419,7 +422,11 @@ def draw_journal(surf, sim) -> None:
             text(surf, "??? — not yet observed", (x, y), 16, DIM)
             y += 34
             continue
-        pygame.draw.circle(surf, sp.color, (x + 8, y + 10), 8)
+        from .art import draw_species
+        icon = _ICONS.get(sid)
+        if icon is None:
+            icon = _ICONS[sid] = draw_species(sp, 30, 0)
+        surf.blit(icon, (x - 8, y - 4))
         text(surf, f"{sp.name}  ({sp.trophic}, {sp.social}{', territorial' if sp.territorial else ''})  world population ~{totals.get(sid, 0)}",
              (x + 22, y), 17, FG)
         text(surf, sp.description[:110], (x + 22, y + 16), 14, DIM)

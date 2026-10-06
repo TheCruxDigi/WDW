@@ -31,6 +31,11 @@ def font(size: int) -> pygame.font.Font:
 
 def reset_caches() -> None:
     _fonts.clear()
+    try:
+        from . import ui
+        ui._ICONS.clear()
+    except ImportError:
+        pass
 
 
 def shade(c, f: float):

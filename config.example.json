@@ -1,0 +1,17 @@
+{
+  "seed": 1337,
+  "world_width": 5,
+  "world_height": 4,
+  "tick_rate": 10.0,
+  "window_width": 1280,
+  "window_height": 720,
+  "fullscreen": false,
+  "tile_size": 22,
+  "audio": true,
+  "volume": 0.5,
+  "autosave_minutes": 4.0,
+  "offline_progress": true,
+  "offline_ticks_per_real_second": 1.0,
+  "offline_max_ticks": 4320,
+  "log_level": "INFO"
+}

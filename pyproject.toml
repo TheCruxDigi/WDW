@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "digitalworld"
+version = "1.0.0"
+description = "Digital World: a persistent, autonomous multi-agent world simulation and exploration game"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["pygame-ce>=2.4", "numpy>=1.24"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "pyinstaller>=6"]
+
+[project.scripts]
+digitalworld = "digitalworld.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["digitalworld*"]
+
+[tool.setuptools.package-data]
+"digitalworld.content" = ["data/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

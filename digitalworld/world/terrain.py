@@ -76,16 +76,27 @@ def _components(passable: np.ndarray) -> tuple[np.ndarray, int]:
 
 
 def _carve_line(t: np.ndarray, x0: int, y0: int, x1: int, y1: int, floor: int, width: int = 1) -> None:
+    """Carve a 4-connected corridor (diagonal steps would not connect under
+    4-neighbour flood fill and would later be filled back in)."""
     h, w = t.shape
-    steps = max(abs(x1 - x0), abs(y1 - y0), 1)
-    for i in range(steps + 1):
-        x = round(x0 + (x1 - x0) * i / steps)
-        y = round(y0 + (y1 - y0) * i / steps)
+
+    def open_at(x, y):
         for dy in range(-width + 1, width):
             for dx in range(-width + 1, width):
                 xx, yy = x + dx, y + dy
                 if 0 <= xx < w and 0 <= yy < h and WALK_COST[t[yy, xx]] >= INF:
                     t[yy, xx] = floor
+
+    steps = max(abs(x1 - x0), abs(y1 - y0), 1)
+    px, py = x0, y0
+    open_at(px, py)
+    for i in range(1, steps + 1):
+        x = round(x0 + (x1 - x0) * i / steps)
+        y = round(y0 + (y1 - y0) * i / steps)
+        if x != px and y != py:
+            open_at(x, py)
+        open_at(x, y)
+        px, py = x, y
 
 
 def generate_terrain(style: str, w: int, h: int, seed: int, gates: list[tuple[int, int]],

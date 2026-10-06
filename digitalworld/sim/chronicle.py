@@ -30,7 +30,17 @@ def census(sim, region, now: int | None = None) -> None:
     world = sim.world
     now = world.clock.tick if now is None else now
     pop = world.population(region.id)
-    plants = plant_fullness(world, region)
+    # forage relative to the region's historical carrying capacity, so lost
+    # patches count as loss (not just how full the surviving patches are)
+    amount, cap = 0.0, 0.0
+    for n in region.resources.values():
+        rk = world.content.resources[n.kind]
+        if rk.food and n.kind != "meat":
+            amount += n.amount
+            cap += n.capacity
+    base = max(region.flags.get("plant_capacity", 0.0), cap)
+    region.flags["plant_capacity"] = base * 0.999 + cap * 0.001 if base > cap else cap
+    plants = amount / base if base else 0.0
     corr = region.corruption_level
     total = sum(pop.values())
     region.stats = {"tick": now, "pop": pop, "total": total, "plants": round(plants, 3),

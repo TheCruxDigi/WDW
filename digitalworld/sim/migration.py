@@ -44,6 +44,7 @@ class MigrationSystem:
         pop_fn = pop_fn or self.pop
         here, factors = suitability(world, region, sp.id, pop_here or pop_fn(region.id), explain=True)
         c.mig_factors = factors
+        c.mig_eval_tick = now
         best, best_s = None, -1e9
         for nb in sorted(region.gates):
             r2 = world.regions[nb]
@@ -70,11 +71,21 @@ class MigrationSystem:
             urg *= 0.3
         c.migrate_target = best
         c.mig_urgency = urg
+        c.mig_eval_tick = now
         c.migrate_reason = dominant_pressure(factors)
         return best
 
     def urgency(self, c) -> float:
-        return c.mig_urgency
+        """Structural pull of a better region plus the creature's own distress:
+        a starving animal in a barren region wants out far more than a fed one."""
+        if c.migrate_target is None:
+            return 0.0
+        f = c.mig_factors or {}
+        press = max(c.needs["hunger"] * (1.0 - f.get("food", 1.0)),
+                    c.needs["thirst"] * (1.0 - f.get("water", 1.0)),
+                    c.taint * min(1.0, -f.get("corruption", 0.0) * 3.0),
+                    c.needs["insecurity"] * f.get("danger", 0.0))
+        return min(1.3, c.mig_urgency + press * 0.9 + 0.1 * min(c.search_fail, 5))
 
     def update(self) -> None:
         """Staggered re-evaluation for loaded creatures."""
@@ -83,7 +94,12 @@ class MigrationSystem:
         now = world.clock.tick
         k = self.EVAL_INTERVAL
         for c in list(world.creatures.values()):
-            if not c.alive or (now + c.id) % k:
+            if not c.alive:
+                continue
+            due = (now + c.id) % k == 0
+            distressed = (c.needs["hunger"] > 0.6 or c.needs["thirst"] > 0.6 or c.search_fail >= 2) \
+                and now - c.mig_eval_tick >= 60
+            if not due and not distressed:
                 continue
             region = world.regions[c.region_id]
             g = world.groups.get(c.group_id) if c.group_id else None

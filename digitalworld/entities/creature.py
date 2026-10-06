@@ -73,6 +73,8 @@ class Creature:
         self.migrate_reason = ""
         self.mig_urgency = 0.0
         self.mig_factors: dict = {}
+        self.mig_eval_tick = -10 ** 9
+        self.search_fail = 0
         self.percept_cache = None
 
     # ---- derived -------------------------------------------------------
@@ -140,9 +142,9 @@ class Creature:
     def to_dict(self) -> dict:
         return {
             "id": self.id, "species": self.species_id, "name": self.name, "region_id": self.region_id,
-            "x": round(self.x, 3), "y": round(self.y, 3), "born_tick": self.born_tick, "sex": self.sex,
-            "health": round(self.health, 4), "needs": {k: round(v, 4) for k, v in self.needs.items()},
-            "traits": {k: round(v, 4) for k, v in self.traits.items()}, "taint": round(self.taint, 4),
+            "x": self.x, "y": self.y, "born_tick": self.born_tick, "sex": self.sex,
+            "health": self.health, "needs": dict(self.needs),
+            "traits": dict(self.traits), "taint": self.taint,
             "group_id": self.group_id, "memory": self.memory.to_list(),
             "relations": {str(k): r.to_dict() for k, r in self.relations.items()},
             "known_nodes": {str(k): v for k, v in self.known_nodes.items()},

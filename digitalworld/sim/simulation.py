@@ -456,6 +456,7 @@ class Simulation:
                 notable = max(notable, 2 if len(g.members) >= 4 or sp.is_predator else 1)
                 what.append(f"leader of the {g.name}")
                 g.leader_id = None
+                g.__dict__["_prev_leader"] = c.id
         prel = c.relations.get(PLAYER_ID)
         if prel is not None and prel.trust > 0.5:
             notable = max(notable, 2)

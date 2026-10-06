@@ -37,6 +37,8 @@ class App:
         self.max_frames = frames
         self.script = script or []
         pygame.init()
+        from .art import reset_caches
+        reset_caches()
         flags = pygame.FULLSCREEN if cfg.fullscreen else pygame.RESIZABLE
         self.screen = pygame.display.set_mode((cfg.window_width, cfg.window_height), flags)
         pygame.display.set_caption("Digital World")

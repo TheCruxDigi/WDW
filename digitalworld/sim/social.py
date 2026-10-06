@@ -56,13 +56,13 @@ def _elect(sim, g: Group) -> None:
         age = now - born
         if age > best_age:
             best, best_age = mid, age
-    old = g.leader_id
+    old = g.leader_id if g.leader_id is not None else g.__dict__.pop("_prev_leader", None)
     g.leader_id = best
     c = world.creatures.get(best)
     if c is not None:
         c.memory.add(now, "became_leader", None, c.region_id, c.x, c.y, 0.7, g.name)
     name = c.name if c is not None else (world.find_creature_record(best) or {}).get("name", "?")
-    if old is not None and len(g.members) >= 2:
+    if old is not None and len(g.members) >= 1 and best is not None:
         cause = g.__dict__.get("_leader_death_event")
         world.history.record(now, "leader_changed",
                              f"{name} now leads the {g.name} ({world.species(g.species_id).name}).",

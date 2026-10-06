@@ -10,7 +10,7 @@ from ..core.clock import format_ticks, TICKS_PER_DAY
 from ..entities.creature import NEED_NAMES, TRAIT_NAMES
 from ..entities.memory import PLAYER_ID
 from ..sim.ecology import suitability
-from .art import shade, mix
+from .art import shade, mix, font
 
 BG = (12, 14, 24)
 FG = (225, 232, 245)
@@ -18,16 +18,6 @@ DIM = (140, 150, 170)
 ACC = (110, 240, 220)
 WARN = (255, 120, 90)
 MAG = (255, 70, 200)
-
-_fonts: dict = {}
-
-
-def font(size: int) -> pygame.font.Font:
-    f = _fonts.get(size)
-    if f is None:
-        f = _fonts[size] = pygame.font.Font(None, size)
-    return f
-
 
 def text(surf, s: str, pos, size=18, color=FG, center=False, right=False) -> pygame.Rect:
     img = font(size).render(str(s), True, color)

@@ -132,9 +132,16 @@ def perceive(sim, c, sp, region) -> Percept:
             p.player_dist = dist
             rel = c.relations.get(PLAYER_ID)
             fear = rel.fear if rel else 0.2
-            if fear > 0.35:
-                p.player_threat = fear * (1.0 if dist < 5 else 0.6)
-                p.threats.append((None, p.player_threat, dist))
+            # only a nearby Wayfinder is frightening, in proportion to closeness
+            reach = 2.5 + 6.0 * fear
+            if fear > 0.3 and dist < reach:
+                p.player_threat = fear * (1.0 - dist / reach) * 1.4
+                if p.player_threat > 0.12:
+                    p.threats.append((None, p.player_threat, dist))
+            elif rel is not None and now - player.last_hit_tick > 60:
+                # habituation: a harmless, distant Wayfinder becomes familiar
+                rel.fear = max(0.0, rel.fear - 0.002)
+                rel.familiarity = min(1.0, rel.familiarity + 0.001)
             if own_terr is not None and own_terr.contains(player.x, player.y):
                 disp = rel.disposition if rel else 0.0
                 if disp < 0.25:

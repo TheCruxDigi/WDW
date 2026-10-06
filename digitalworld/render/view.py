@@ -9,7 +9,7 @@ import pygame
 
 from ..world.region import CORR_CELL
 from ..world.terrain import Tile
-from .art import TerrainPainter, SpriteBank, draw_icon, shade, mix
+from .art import TerrainPainter, SpriteBank, draw_icon, shade, mix, font
 
 
 class Camera:
@@ -221,7 +221,7 @@ class WorldView:
             pygame.draw.circle(s, (*col, 160), (r + 2, r + 2), r, 2)
             surf.blit(s, (sx - r - 2, sy - r - 2))
             if g is not None:
-                f = pygame.font.Font(None, 16)
+                f = font(16)
                 surf.blit(f.render(f"{g.name} {t.strength:.0%}", True, col), (sx - 30, sy - r - 12))
 
     def _nodes(self, surf, sim, region, cam):
@@ -335,7 +335,6 @@ class WorldView:
         world = sim.world
         ts = cam.ts
         t = self.time
-        font = None
         sel = self.selected
         for c in sorted(world.creatures_in(region.id), key=lambda c: c.y):
             x = c.prev_x + (c.x - c.prev_x) * alpha
@@ -386,9 +385,7 @@ class WorldView:
                 if len(pts) > 1:
                     pygame.draw.lines(surf, (120, 120, 160), False, [(sx, sy)] + pts, 1)
             if self.debug:
-                if font is None:
-                    font = pygame.font.Font(None, 14)
-                surf.blit(font.render(c.action_name, True, (230, 230, 230)), (sx - 14, sy + size // 2))
+                surf.blit(font(14).render(c.action_name, True, (230, 230, 230)), (sx - 14, sy + size // 2))
 
     def _player(self, surf, sim, cam):
         p = sim.world.player

@@ -148,6 +148,7 @@ class Eat(Action):
                     return FAILED
             node.users.append(c.id)
             st["feeding"] = True
+            c.remember_node(node, region.id, now)
         mult = sp.diet.get(node.kind, 0.5)
         taken = sim.consume(region, node, sp.appetite / 22.0, c.id)
         if taken <= 0:
@@ -157,6 +158,7 @@ class Eat(Action):
         if node.kind == "bytebloom" and sp.corruption_affinity <= 0:
             c.taint = min(1.0, c.taint + 0.003)
         c.status_icon = "food"
+        c.search_fail = 0
         if c.needs["hunger"] < 0.04:
             c.remember_node(node, region.id, now)
             c.counters["meals"] += 1
@@ -571,13 +573,14 @@ class Explore(Action):
         food_seen = any(p.nodes.get(k) for k in sp.diet) or (sp.is_predator and p.prey) or any(
             v[0] == rid and v[3] in sp.diet and v[4] > 0.15 and not c.blacklisted(f"n{k}", ctx.now)
             for k, v in c.known_nodes.items())
+        frustration = max(0.3, 1.0 - 0.2 * c.search_fail)
         if c.needs["hunger"] > 0.35 and not food_seen:
-            score += c.needs["hunger"] * 0.75
+            score += c.needs["hunger"] * 0.75 * frustration
             reason = f"searching for food (hunger {c.needs['hunger']:.2f})"
         if c.needs["thirst"] > 0.35 and not p.nodes.get("water"):
             known_water = any(v[3] == "water" and v[0] == ctx.region.id for v in c.known_nodes.values())
             if not known_water:
-                score += c.needs["thirst"] * 0.7
+                score += c.needs["thirst"] * 0.7 * frustration
                 reason = f"searching for water (thirst {c.needs['thirst']:.2f})"
         return [Option(self, score, None, reason, {"search": reason.startswith("searching")})]
 
@@ -607,6 +610,12 @@ class Explore(Action):
             sim.scan_surroundings(c, sp, region)
         if r == ARRIVED:
             c.needs["curiosity"] = max(0.0, c.needs["curiosity"] - 0.35)
+            if st.get("search"):
+                rid = region.id
+                found = any(v[0] == rid and (v[3] in sp.diet or v[3] == "water") and v[4] > 0.15
+                            for v in c.known_nodes.values())
+                if not found:
+                    c.search_fail += 1  # frustration builds; leaving starts to look better
             return SUCCESS
         if r == MOVE_FAILED:
             st["goal"] = None

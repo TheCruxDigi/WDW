@@ -18,6 +18,21 @@ from ..world.terrain import Tile
 ASSET_DIR = Path(__file__).resolve().parents[2] / "assets"
 
 
+_fonts: dict = {}
+
+
+def font(size: int) -> pygame.font.Font:
+    """Cached default font (cache is reset by the App on each pygame init)."""
+    f = _fonts.get(size)
+    if f is None:
+        f = _fonts[size] = pygame.font.Font(None, size)
+    return f
+
+
+def reset_caches() -> None:
+    _fonts.clear()
+
+
 def shade(c, f: float):
     return tuple(max(0, min(255, int(v * f))) for v in c[:3])
 
@@ -288,7 +303,7 @@ def draw_icon(surf: pygame.Surface, kind: str, x: int, y: int, t: float) -> None
     if not kind:
         return
     if kind == "sleep":
-        f = pygame.font.Font(None, 16)
+        f = font(16)
         surf.blit(f.render("z", True, (200, 220, 255)), (x + int(math.sin(t * 2) * 2), y - 4))
     elif kind == "flee":
         pygame.draw.rect(surf, (255, 90, 70), (x, y - 6, 3, 7))
@@ -303,7 +318,7 @@ def draw_icon(surf: pygame.Surface, kind: str, x: int, y: int, t: float) -> None
         pygame.draw.circle(surf, (255, 110, 160), (x + 2, y - 1), 2)
         pygame.draw.polygon(surf, (255, 110, 160), [(x - 4, y), (x, y + 4), (x + 4, y)])
     elif kind == "investigate":
-        f = pygame.font.Font(None, 16)
+        f = font(16)
         surf.blit(f.render("?", True, (255, 240, 140)), (x - 3, y - 6))
     elif kind in ("fight", "hunt", "territory"):
         col = {"fight": (255, 80, 80), "hunt": (255, 150, 60), "territory": (255, 200, 60)}[kind]
